@@ -1,7 +1,5 @@
 import timeit
 import argparse
-from breakers import break_caesar, break_affine, break_mono
-
 
 def load_file_content(file_path):
     try:
@@ -13,24 +11,18 @@ def load_file_content(file_path):
 
 
 def test_caesar(ciphertext):
-    break_caesar(ciphertext)
-    setup_code = f"from breakers import break_caesar; ciphertext = '''{ciphertext}'''"
-    test_code = "break_caesar(ciphertext)"
-    return timeit.timeit(stmt=test_code, setup=setup_code, number=10)
+    from breakers import break_caesar
+    return timeit.timeit(lambda: break_caesar(ciphertext), number=10)
 
 
 def test_affine(ciphertext):
-    break_affine(ciphertext)
-    setup_code = f"from breakers import break_affine; ciphertext = '''{ciphertext}'''"
-    test_code = "break_affine(ciphertext)"
-    return timeit.timeit(stmt=test_code, setup=setup_code, number=10)
+    from breakers import break_affine
+    return timeit.timeit(lambda: break_affine(ciphertext), number=10)
 
 
 def test_mono(ciphertext, dictionary):
-    break_mono(ciphertext, dictionary.splitlines())
-    setup_code = f"from breakers import break_mono; ciphertext = '''{ciphertext}'''; dictionary = '''{dictionary}'''"
-    test_code = "break_mono(ciphertext, dictionary.splitlines())"
-    return timeit.timeit(stmt=test_code, setup=setup_code, number=10)
+    from breakers import break_mono
+    return timeit.timeit(lambda: break_mono(ciphertext, dictionary.splitlines()), number=10)
 
 
 def main():

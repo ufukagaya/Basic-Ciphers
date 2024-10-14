@@ -74,13 +74,12 @@ def break_mono(ciphertext, dictionary):
 
 def main():
     parser = argparse.ArgumentParser(description="Cipher Breaking")
-    parser.add_argument("cipher", choices=["caesar", "affine", "mono", "alphatest"], help="Encrypting method")
-    parser.add_argument("file", default=None, help="Path")
-    parser.add_argument("dictionary", default=None, help="dict")
+    parser.add_argument("cipher", choices=["caesar", "affine", "mono", "alphatest"])
+    parser.add_argument("file", default=None)
+    parser.add_argument("dictionary", default=None)
 
     args = parser.parse_args()
 
-    # Dosya okuma
     try:
         with open(args.file, "r") as f:
             ciphertext = f.read()

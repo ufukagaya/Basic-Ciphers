@@ -1,6 +1,5 @@
 import argparse
 
-
 # Caesar Cipher
 def encrypt_caesar(plaintext, shift):
     encrypted_text = ""
@@ -118,13 +117,13 @@ def decrypt_mono(ciphertext, key):
 def main():
     global result
     parser = argparse.ArgumentParser(description="Affine Cipher Encryption/Decryption")
-    parser.add_argument("cipher", choices=["caesar", "affine", "mono", "show"], help="method")
-    parser.add_argument("file", help="path")
-    parser.add_argument("mode", choices=["e", "d", "s"], help="Mod: e = encryption, d = decryption")
-    parser.add_argument("-s", "--shift", type=int, help="shifting amount")
-    parser.add_argument("-a", "--a", type=int, help="a value for Affine Cipher")
-    parser.add_argument("-b", "--b", type=int, help="b value for Affine Cipher")
-    parser.add_argument("-k", "--key", type=str, help="key for Mono-alphabetic")
+    parser.add_argument("cipher", choices=["caesar", "affine", "mono", "show"])
+    parser.add_argument("file")
+    parser.add_argument("mode", choices=["e", "d", "s"])
+    parser.add_argument("-s", "--shift", type=int)
+    parser.add_argument("-a", "--a", type=int)
+    parser.add_argument("-b", "--b", type=int)
+    parser.add_argument("-k", "--key", type=str)
 
     args = parser.parse_args()
 
