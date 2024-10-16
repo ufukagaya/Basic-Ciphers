@@ -1,4 +1,5 @@
 import argparse
+import math
 from collections import Counter
 from ciphers import decrypt_caesar, decrypt_affine
 
@@ -18,7 +19,7 @@ def gcd(x, y):
 
 
 def get_valid_a_b_pairs(m):
-    valid_pairs = [(a, b) for a in range(1, m) if gcd(a, m) == 1 for b in range(m)]
+    valid_pairs = [(a, b) for a in range(1, m) if math.gcd(a, m) == 1 for b in range(m)]
     return valid_pairs
 
 
