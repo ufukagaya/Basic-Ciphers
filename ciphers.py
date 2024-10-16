@@ -23,8 +23,9 @@ def encrypt_caesar(plaintext, shift):
     english_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     shifted_english_alphabet = english_alphabet[-shift:] + english_alphabet[:-shift]
     for char in plaintext:
-        if char.upper() in english_alphabet:  # shift all letters
-            index = english_alphabet.index(char)
+        char_upper = char.upper()
+        if char_upper in english_alphabet:  # shift all letters
+            index = english_alphabet.index(char_upper)
             encrypted_text += shifted_english_alphabet[index]
         else:
             encrypted_text += char  # nay char without letter is added directly
@@ -54,8 +55,9 @@ def decrypt_caesar(ciphertext, shift):
     english_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     shifted_english_alphabet = english_alphabet[-shift:] + english_alphabet[:-shift]
     for char in ciphertext:
-        if char.upper() in english_alphabet:  # shift all letters
-            index = english_alphabet.index(char)
+        char_upper = char.upper()
+        if char_upper in english_alphabet:  # shift all letters
+            index = english_alphabet.index(char_upper)
             decrypted_text += shifted_english_alphabet[index]
         else:
             decrypted_text += char  # nay char without letter is added directly
