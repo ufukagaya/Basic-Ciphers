@@ -1,7 +1,7 @@
 import argparse
 
 # Caesar Cipher
-def encrypt_caesar(plaintext, shift):
+"""def encrypt_caesar(plaintext, shift):
     encrypted_text = ""
     for char in plaintext:
         if char.isalpha():  # shift all letters
@@ -15,10 +15,28 @@ def encrypt_caesar(plaintext, shift):
     with open(file_path, "w") as f:
         f.write(encrypted_text)
 
+    return encrypted_text"""
+
+def encrypt_caesar(plaintext, shift):
+    encrypted_text = ""
+    shift = shift % 26
+    english_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    shifted_english_alphabet = english_alphabet[-shift:] + english_alphabet[:-shift]
+    for char in plaintext:
+        if char.upper() in english_alphabet:  # shift all letters
+            index = english_alphabet.index(char)
+            encrypted_text += shifted_english_alphabet[index]
+        else:
+            encrypted_text += char  # nay char without letter is added directly
+
+    file_path = "coded_caesar.txt"
+    with open(file_path, "w") as f:
+        f.write(encrypted_text)
+
     return encrypted_text
 
 
-def decrypt_caesar(ciphertext, shift):
+"""def decrypt_caesar(ciphertext, shift):
     decrypted_text = ""
     for char in ciphertext:
         if char.isalpha():
@@ -28,8 +46,20 @@ def decrypt_caesar(ciphertext, shift):
         else:
             decrypted_text += char
 
-    return decrypted_text
+    return decrypted_text"""
 
+def decrypt_caesar(ciphertext, shift):
+    decrypted_text = ""
+    shift = -(shift % 26)
+    english_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    shifted_english_alphabet = english_alphabet[-shift:] + english_alphabet[:-shift]
+    for char in ciphertext:
+        if char.upper() in english_alphabet:  # shift all letters
+            index = english_alphabet.index(char)
+            decrypted_text += shifted_english_alphabet[index]
+        else:
+            decrypted_text += char  # nay char without letter is added directly
+    return decrypted_text
 
 # Affine
 def gcd(a, b):
