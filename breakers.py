@@ -3,12 +3,20 @@ import math
 from collections import Counter
 from ciphers import decrypt_caesar, decrypt_affine
 
+try:
+    with open("dictionary.txt", "r") as f:
+        dictionary = f.read()
+except FileNotFoundError:
+    print("Dictionary not found")
 
 def break_caesar(ciphertext):
     potential_decryptions = []
     for shift in range(26):  # try from 0 to 25
         decrypted_text = decrypt_caesar(ciphertext, shift)
         potential_decryptions.append((shift, decrypted_text))
+        words_set = set(decrypted_text.split())
+        if all((word in dictionary) or (word.lower() in dictionary) for word in words_set if word.isalpha()):
+            break
     return potential_decryptions
 
 
@@ -29,6 +37,9 @@ def decrypt_pair(ciphertext, pairs):
         try:
             decrypted_text = decrypt_affine(ciphertext, a, b)
             results.append((a, b, decrypted_text))
+            words_set = set(decrypted_text.split())
+            if all((word in dictionary) or (word.lower() in dictionary) for word in words_set if word.isalpha()):
+                break
         except ValueError:
             continue
     return results
@@ -55,7 +66,7 @@ def analyze_letter_frequency(dictionary):
     return result
 
 
-def break_mono(ciphertext, dictionary):
+def break_mono(ciphertext):
     english_freq_order = analyze_letter_frequency(dictionary)  # letter frequency method
     letter_freq = Counter(filter(str.isalpha, ciphertext.upper()))
     most_common = [pair[0] for pair in letter_freq.most_common()]
@@ -77,7 +88,6 @@ def main():
     parser = argparse.ArgumentParser(description="Cipher Breaking")
     parser.add_argument("cipher", choices=["caesar", "affine", "mono", "alphatest"])
     parser.add_argument("file", default=None)
-    parser.add_argument("dictionary", default=None)
 
     args = parser.parse_args()
 
@@ -86,26 +96,21 @@ def main():
             ciphertext = f.read()
     except FileNotFoundError:
         return
-
-    try:
-        with open(args.dictionary, "r") as f:
-            dictionary = f.read()
-    except FileNotFoundError:
-        return
-
+    
     # code breaking process
     if args.cipher == "caesar":
         possible_decryptions = break_caesar(ciphertext)
         print("Possible solutions:")
         for shift, decrypted_text in possible_decryptions:
             print(f"Shift {shift}: {decrypted_text}")
+
     elif args.cipher == "affine":
         possible_decryptions = break_affine(ciphertext)
         print("Possible solutions:")
         for a, b, decrypted_text in possible_decryptions:
             print(f"a={a}, b={b}: {decrypted_text}")
     elif args.cipher == "mono":
-        possible_decryptions = break_mono(ciphertext, dictionary)
+        possible_decryptions = break_mono(ciphertext)
         print("Possible solutions:")
         print(possible_decryptions)
     elif args.cipher == "alphatest":
@@ -114,6 +119,7 @@ def main():
     else:
         print("Invalid method")
         return
+    
 
 
 if __name__ == '__main__':
