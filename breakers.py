@@ -1,6 +1,8 @@
 import argparse
 import math
 from collections import Counter
+from itertools import permutations
+
 from ciphers import decrypt_caesar, decrypt_affine
 
 try:
@@ -18,7 +20,6 @@ def break_caesar(ciphertext):
         if all((word in dictionary) or (word.lower() in dictionary) for word in words_set if word.isalpha()):
             break
     return potential_decryptions
-
 
 def gcd(x, y):
     while y:
@@ -50,8 +51,20 @@ def break_affine(ciphertext):
     valid_pairs = get_valid_a_b_pairs(m)  # Get valid (a, b) pairs
     return decrypt_pair(ciphertext, valid_pairs)  # Decrypt using pairs
 
+# BREAK MONO
+
+def load_dictionary(file_path):
+    with open(file_path, 'r') as file:
+        return set(word.strip().upper() for word in file)
+
 
 def analyze_letter_frequency(dictionary):
+    try:
+        with open(dictionary, "r") as f:
+            dictionary = f.read()
+    except FileNotFoundError:
+        return
+
     frequency = {char: 0 for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"}
 
     for line in dictionary:
@@ -66,28 +79,62 @@ def analyze_letter_frequency(dictionary):
     return result
 
 
-def break_mono(ciphertext):
-    english_freq_order = analyze_letter_frequency(dictionary)  # letter frequency method
+
+def break_mono(ciphertext, dictionary_file_path):
+    common_letters = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
     letter_freq = Counter(filter(str.isalpha, ciphertext.upper()))
     most_common = [pair[0] for pair in letter_freq.most_common()]
+    dictionary = load_dictionary(dictionary_file_path)
+    key_guess = {
+        most_common[0]: "E",
+        most_common[-1]: "Z",
+        most_common[-2]: "Q",
+        most_common[-3]: "J",
+    }
+    three_letter_words = {
 
-    key_guess = {most_common[i]: english_freq_order[i] for i in range(len(most_common))}
+    }
+    cwords = ciphertext.split()
+    for w in cwords:
+        w = w.upper
+        if len(w) == 3:
+            if three_letter_words[w]:
+                three_letter_words[w] += 1
+            else:
+                three_letter_words[w] = 1
 
-    decrypted_text = ""
-    for char in ciphertext:
-        if char.isalpha():
-            decrypted_char = key_guess.get(char.upper(), char).lower() if char.islower() else key_guess.get(
-                char.upper(), char)
-            decrypted_text += decrypted_char
-        else:
-            decrypted_text += char
-    return decrypted_text
+    sorted_three = sorted(three_letter_words, key=lambda x: sorted_three[x], reverse=True)
+    sorted_three = sorted_three.keys()
+    if sorted_three[0][2] == "E":
+        key_guess[sorted_three[0][0]] = "T"
+        key_guess[sorted_three[0][1]] = "H"
+        key_guess[sorted_three[1][0]] = "A"
+        key_guess[sorted_three[1][1]] = "N"
+        key_guess[sorted_three[1][2]] = "D"
+    else:
+        key_guess[sorted_three[0][0]] = "A"
+        key_guess[sorted_three[0][1]] = "N"
+        key_guess[sorted_three[0][2]] = "D"
+        key_guess[sorted_three[1][0]] = "T"
+        key_guess[sorted_three[1][1]] = "H"
+
+
+
+
+
+
+
+
+
+
+
 
 
 def main():
     parser = argparse.ArgumentParser(description="Cipher Breaking")
     parser.add_argument("cipher", choices=["caesar", "affine", "mono", "alphatest"])
     parser.add_argument("file", default=None)
+    parser.add_argument("dictionary", default=None)
 
     args = parser.parse_args()
 
@@ -96,7 +143,6 @@ def main():
             ciphertext = f.read()
     except FileNotFoundError:
         return
-    
     # code breaking process
     if args.cipher == "caesar":
         possible_decryptions = break_caesar(ciphertext)
@@ -110,17 +156,16 @@ def main():
         for a, b, decrypted_text in possible_decryptions:
             print(f"a={a}, b={b}: {decrypted_text}")
     elif args.cipher == "mono":
-        possible_decryptions = break_mono(ciphertext)
+        possible_decryptions = break_mono(ciphertext, args.dictionary)
         print("Possible solutions:")
         print(possible_decryptions)
     elif args.cipher == "alphatest":
-        sortedletters = analyze_letter_frequency(dictionary)
+        sortedletters = analyze_letter_frequency(args.dictionary)
         print(sortedletters)
     else:
         print("Invalid method")
         return
     
-
 
 if __name__ == '__main__':
     main()

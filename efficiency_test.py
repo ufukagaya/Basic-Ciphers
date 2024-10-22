@@ -1,6 +1,7 @@
 import timeit
 import argparse
 
+
 def load_file_content(file_path):
     try:
         with open(file_path, "r") as f:

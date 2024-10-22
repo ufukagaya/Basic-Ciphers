@@ -18,6 +18,7 @@ import math
 
     return encrypted_text"""
 
+
 def encrypt_caesar(plaintext, shift):
     encrypted_text = ""
     shift = shift % 26
@@ -71,12 +72,6 @@ def decrypt_caesar(ciphertext, shift):
     return decrypted_text
 
 # Affine
-def gcd(a, b):
-    while b:
-        a, b = b, a % b
-    return a
-
-
 def mod_inverse(a, m):
     for i in range(1, m):
         if (a * i) % m == 1:
@@ -86,6 +81,10 @@ def mod_inverse(a, m):
 # Affine Cipher
 """def encrypt_affine(plaintext, a, b):
     if gcd(a, 26) != 1:  # check if a and 26 are prime along them.
+=======
+def encrypt_affine(plaintext, a, b):
+    if math.gcd(a, 26) != 1:  # check if a and 26 are prime along them.
+>>>>>>> Stashed changes
         raise ValueError("a and 26 must be prime along them.")
 
     encrypted_text = ""
@@ -103,6 +102,7 @@ def mod_inverse(a, m):
         f.write(encrypted_text)
 
     return encrypted_text"""
+
 
 def encrypt_affine(plaintext, a, b):
     if math.gcd(a, 26) != 1:  # check if a and 26 are prime along them.
@@ -132,6 +132,10 @@ def encrypt_affine(plaintext, a, b):
 
 """def decrypt_affine(ciphertext, a, b):
     if gcd(a, 26) != 1:
+=======
+def decrypt_affine(ciphertext, a, b):
+    if math.gcd(a, 26) != 1:
+>>>>>>> Stashed changes
         raise ValueError("a and 26 must be prime along them.")
 
     decrypted_text = ""
@@ -145,6 +149,7 @@ def encrypt_affine(plaintext, a, b):
         else:
             decrypted_text += char
     return decrypted_text"""
+
 
 def decrypt_affine(ciphertext, a, b):
     if math.gcd(a, 26) != 1:
@@ -218,6 +223,7 @@ def encrypt_mono(plaintext, key):
         else:
             decrypted_text += char
     return decrypted_text"""
+
 
 def decrypt_mono(ciphertext, key):
     decrypted_text = ""
