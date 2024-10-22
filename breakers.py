@@ -87,10 +87,10 @@ def break_mono(ciphertext, dictionary_file_path):
     most_common = [pair[0] for pair in letter_freq.most_common()]
     #dictionary = load_dictionary(dictionary_file_path)
     key_guess = {
-        most_common[0]: "E",
-        most_common[-1]: "Z",
-        most_common[-2]: "Q",
-        most_common[-3]: "J",
+        #most_common[0]: "E",
+        #most_common[-1]: "Z",
+        #most_common[-2]: "Q",
+        #most_common[-3]: "J",
     }
     three_letter_words = {
 
@@ -109,6 +109,7 @@ def break_mono(ciphertext, dictionary_file_path):
     if sorted_three[0][2] == "E":
         key_guess[sorted_three[0][0]] = "T"
         key_guess[sorted_three[0][1]] = "H"
+        key_guess[sorted_three[0][2]] = "E"
         key_guess[sorted_three[1][0]] = "A"
         key_guess[sorted_three[1][1]] = "N"
         key_guess[sorted_three[1][2]] = "D"
@@ -118,8 +119,9 @@ def break_mono(ciphertext, dictionary_file_path):
         key_guess[sorted_three[0][2]] = "D"
         key_guess[sorted_three[1][0]] = "T"
         key_guess[sorted_three[1][1]] = "H"
+        key_guess[sorted_three[1][2]] = "E"
     split_dictionary = dictionary.split()
-    for w in sorted(cwords):
+    for w in sorted(cwords, key=len, reverse=True):
         if any(char.upper() in key_guess for char in w):
             regex_string = ""
             unknown_chars = []
@@ -142,14 +144,27 @@ def break_mono(ciphertext, dictionary_file_path):
                     print(word)
                     matching_words.append(word)"""
             #print(matching_words)
+
             if len(matching_words) == 1:
                 match_word = matching_words[0]
                 for index in unknown_chars:
                     letter = match_word[index]
                     key_guess[w[index].upper()] = letter.upper()
+            else:
+                known_letters = set(key_guess.values())
+                eligible_words = [
+                word for word in matching_words if not any(word[index].upper() in known_letters for index in unknown_chars)
+                ]
+                if len(eligible_words) == 1:
+                    match_word = eligible_words[0]
+                    for index in unknown_chars:
+                        letter = match_word[index]
+                        key_guess[w[index].upper()] = letter.upper()
+
+            #print(key_guess)   
             if len(key_guess) == 26:
                 break
-
+                
     decrypted_text = ""
     for char in ciphertext:
         if char.isalpha():
@@ -158,7 +173,7 @@ def break_mono(ciphertext, dictionary_file_path):
             else:
                 decrypted_text += key_guess[char.upper()]
         else:
-            decrypted_text += char    
+            decrypted_text += char 
     print(decrypted_text)        
 
 
