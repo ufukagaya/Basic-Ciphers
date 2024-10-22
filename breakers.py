@@ -153,9 +153,13 @@ def break_mono(ciphertext, dictionary_file_path):
     decrypted_text = ""
     for char in ciphertext:
         if char.isalpha():
-            decrypted_text += key_guess[char.upper()]
+            if char.islower():
+                decrypted_text += key_guess[char.upper()].lower()
+            else:
+                decrypted_text += key_guess[char.upper()]
         else:
             decrypted_text += char    
+    print(decrypted_text)        
 
 
 def main():
