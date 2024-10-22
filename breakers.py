@@ -2,6 +2,7 @@ import argparse
 import math
 from collections import Counter
 from itertools import permutations
+import re
 
 from ciphers import decrypt_caesar, decrypt_affine
 
@@ -84,7 +85,7 @@ def break_mono(ciphertext, dictionary_file_path):
     common_letters = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
     letter_freq = Counter(filter(str.isalpha, ciphertext.upper()))
     most_common = [pair[0] for pair in letter_freq.most_common()]
-    dictionary = load_dictionary(dictionary_file_path)
+    #dictionary = load_dictionary(dictionary_file_path)
     key_guess = {
         most_common[0]: "E",
         most_common[-1]: "Z",
@@ -96,15 +97,15 @@ def break_mono(ciphertext, dictionary_file_path):
     }
     cwords = ciphertext.split()
     for w in cwords:
-        w = w.upper
+        w = w.upper()
         if len(w) == 3:
-            if three_letter_words[w]:
+            if w in three_letter_words:
                 three_letter_words[w] += 1
             else:
                 three_letter_words[w] = 1
-
-    sorted_three = sorted(three_letter_words, key=lambda x: sorted_three[x], reverse=True)
-    sorted_three = sorted_three.keys()
+    sorted_three = {}
+    sorted_three = dict(sorted(three_letter_words.items(), key=lambda x: x[1], reverse=True))
+    sorted_three = list(sorted_three.keys())
     if sorted_three[0][2] == "E":
         key_guess[sorted_three[0][0]] = "T"
         key_guess[sorted_three[0][1]] = "H"
@@ -117,24 +118,51 @@ def break_mono(ciphertext, dictionary_file_path):
         key_guess[sorted_three[0][2]] = "D"
         key_guess[sorted_three[1][0]] = "T"
         key_guess[sorted_three[1][1]] = "H"
+    split_dictionary = dictionary.split()
+    for w in sorted(cwords):
+        if any(char.upper() in key_guess for char in w):
+            regex_string = ""
+            unknown_chars = []
+            for index, letter in enumerate(w):
+                if letter.isalpha():
+                    if letter.upper() in key_guess:
+                        regex_string += key_guess[letter.upper()]
+                    else:
+                        regex_string += "."
+                        unknown_chars.append(index)
+                else:
+                    break       
+                
+            regex_string = f"^{regex_string}$"
+            pattern = re.compile(regex_string, re.IGNORECASE)
+            matching_words = [word for word in split_dictionary if pattern.match(word)]
+            """for word in split_dictionary:
+                if pattern.match(word):
+                    print(regex_string)
+                    print(word)
+                    matching_words.append(word)"""
+            #print(matching_words)
+            if len(matching_words) == 1:
+                match_word = matching_words[0]
+                for index in unknown_chars:
+                    letter = match_word[index]
+                    key_guess[w[index].upper()] = letter.upper()
+            if len(key_guess) == 26:
+                break
 
-
-
-
-
-
-
-
-
-
-
+    decrypted_text = ""
+    for char in ciphertext:
+        if char.isalpha():
+            decrypted_text += key_guess[char.upper()]
+        else:
+            decrypted_text += char    
 
 
 def main():
     parser = argparse.ArgumentParser(description="Cipher Breaking")
     parser.add_argument("cipher", choices=["caesar", "affine", "mono", "alphatest"])
     parser.add_argument("file", default=None)
-    parser.add_argument("dictionary", default=None)
+    #parser.add_argument("dictionary", default=None)
 
     args = parser.parse_args()
 
@@ -156,7 +184,7 @@ def main():
         for a, b, decrypted_text in possible_decryptions:
             print(f"a={a}, b={b}: {decrypted_text}")
     elif args.cipher == "mono":
-        possible_decryptions = break_mono(ciphertext, args.dictionary)
+        possible_decryptions = break_mono(ciphertext, dictionary)
         print("Possible solutions:")
         print(possible_decryptions)
     elif args.cipher == "alphatest":
