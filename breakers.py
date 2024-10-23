@@ -184,10 +184,11 @@ def break_mono(ciphertext):
     decrypted_text = ""
     for char in ciphertext:
         if char.isalpha():
-            if char.islower():
-                decrypted_text += key_guess[char.upper()].lower()
+            char_upper = char.upper()
+            if char_upper in key_guess:
+                decrypted_text += key_guess[char_upper].lower() if char.islower() else key_guess[char_upper]
             else:
-                decrypted_text += key_guess[char.upper()]
+                decrypted_text += char
         else:
             decrypted_text += char
 
