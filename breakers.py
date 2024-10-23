@@ -12,6 +12,7 @@ try:
 except FileNotFoundError:
     print("Dictionary not found")
 
+
 def break_caesar(ciphertext):
     potential_decryptions = []
     for shift in range(26):  # try from 0 to 25
@@ -19,8 +20,14 @@ def break_caesar(ciphertext):
         potential_decryptions.append((shift, decrypted_text))
         words_set = set(decrypted_text.split())
         if all((word in dictionary) or (word.lower() in dictionary) for word in words_set if word.isalpha()):
+            # Write the successful decryption to break_caesar.txt
+            with open("break_caesar.txt", "w") as fw:
+                fw.write(f"Shift = {shift}, Decrypted Text: \n{decrypted_text}\n")
             break
     return potential_decryptions
+
+
+# BREAK AFFINE
 
 def gcd(x, y):
     while y:
@@ -50,7 +57,18 @@ def decrypt_pair(ciphertext, pairs):
 def break_affine(ciphertext):
     m = 26
     valid_pairs = get_valid_a_b_pairs(m)  # Get valid (a, b) pairs
-    return decrypt_pair(ciphertext, valid_pairs)  # Decrypt using pairs
+
+    # Attempt to decrypt using valid pairs
+    results = decrypt_pair(ciphertext, valid_pairs)
+
+    # Write the results to break_affine.txt
+    with open("break_affine.txt", "w") as fw:
+        a, b, decrypted_text = results[-1]
+        fw.write(f"a = {a}, b = {b}, Decrypted Text: \n{decrypted_text}\n")
+
+    # Return results
+    return results
+
 
 # BREAK MONO
 
@@ -80,17 +98,16 @@ def analyze_letter_frequency(dictionary):
     return result
 
 
-
-def break_mono(ciphertext, dictionary_file_path):
+def break_mono(ciphertext):
     common_letters = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
     letter_freq = Counter(filter(str.isalpha, ciphertext.upper()))
     most_common = [pair[0] for pair in letter_freq.most_common()]
-    #dictionary = load_dictionary(dictionary_file_path)
+    # dictionary = load_dictionary(dictionary_file_path)
     key_guess = {
-        #most_common[0]: "E",
-        #most_common[-1]: "Z",
-        #most_common[-2]: "Q",
-        #most_common[-3]: "J",
+        # most_common[0]: "E",
+        # most_common[-1]: "Z",
+        # most_common[-2]: "Q",
+        # most_common[-3]: "J",
     }
     three_letter_words = {
 
@@ -133,8 +150,8 @@ def break_mono(ciphertext, dictionary_file_path):
                         regex_string += "."
                         unknown_chars.append(index)
                 else:
-                    break       
-                
+                    break
+
             regex_string = f"^{regex_string}$"
             pattern = re.compile(regex_string, re.IGNORECASE)
             matching_words = [word for word in split_dictionary if pattern.match(word)]
@@ -143,7 +160,6 @@ def break_mono(ciphertext, dictionary_file_path):
                     print(regex_string)
                     print(word)
                     matching_words.append(word)"""
-            #print(matching_words)
 
             if len(matching_words) == 1:
                 match_word = matching_words[0]
@@ -153,7 +169,8 @@ def break_mono(ciphertext, dictionary_file_path):
             else:
                 known_letters = set(key_guess.values())
                 eligible_words = [
-                word for word in matching_words if not any(word[index].upper() in known_letters for index in unknown_chars)
+                    word for word in matching_words if
+                    not any(word[index].upper() in known_letters for index in unknown_chars)
                 ]
                 if len(eligible_words) == 1:
                     match_word = eligible_words[0]
@@ -161,10 +178,9 @@ def break_mono(ciphertext, dictionary_file_path):
                         letter = match_word[index]
                         key_guess[w[index].upper()] = letter.upper()
 
-            #print(key_guess)   
             if len(key_guess) == 26:
                 break
-                
+
     decrypted_text = ""
     for char in ciphertext:
         if char.isalpha():
@@ -173,15 +189,19 @@ def break_mono(ciphertext, dictionary_file_path):
             else:
                 decrypted_text += key_guess[char.upper()]
         else:
-            decrypted_text += char 
-    print(decrypted_text)        
+            decrypted_text += char
+
+    # Write the decrypted text to break_mono.txt
+    with open("break_mono.txt", "w") as output_file:
+        output_file.write(decrypted_text)
+
+    return decrypted_text
 
 
 def main():
     parser = argparse.ArgumentParser(description="Cipher Breaking")
     parser.add_argument("cipher", choices=["caesar", "affine", "mono", "alphatest"])
     parser.add_argument("file", default=None)
-    #parser.add_argument("dictionary", default=None)
 
     args = parser.parse_args()
 
@@ -203,16 +223,16 @@ def main():
         for a, b, decrypted_text in possible_decryptions:
             print(f"a={a}, b={b}: {decrypted_text}")
     elif args.cipher == "mono":
-        possible_decryptions = break_mono(ciphertext, dictionary)
+        possible_decryptions = break_mono(ciphertext)
         print("Possible solutions:")
         print(possible_decryptions)
     elif args.cipher == "alphatest":
-        sortedletters = analyze_letter_frequency(args.dictionary)
+        sortedletters = analyze_letter_frequency(ciphertext)
         print(sortedletters)
     else:
         print("Invalid method")
         return
-    
+
 
 if __name__ == '__main__':
     main()
