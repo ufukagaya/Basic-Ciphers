@@ -26,53 +26,53 @@ This project covers basic cipher concepts. There are some cipher methods used in
 
 To show the first version of plaintext: 
 
-```python ciphers.py show plain.txt s```
+```python cipher.py show plain.txt s```
 
 ### Use of Caesar Method:
 
 To encrypt the plaintext using the Caesar method by shifting amount 13. This command creates a txt file named coded_caesar.txt containing the encrypted text: 
 
-```python ciphers.py caesar plain.txt e -s 13```
+```python cipher.py caesar plain.txt e -s 13```
 
 To decrypt the ciphertext using the same Caesar method by shifting amount 13: 
 
-```python ciphers.py caesar coded_caesar.txt d -s 13```
+```python cipher.py caesar coded_caesar.txt d -s 13```
 
 To break the ciphertext using the Caesar method: 
 
-```python breakers.py caesar coded_caesar.txt```
+```python break.py caesar coded_caesar.txt```
 
 ### Use of Affine Method:
 
 To encrypt the plaintext using the Affine method by the function of 3x+5. This command creates a txt file named coded_affine.txt containing the encrypted text: 
 
-```python ciphers.py affine plain.txt e -a 3 -b 5```
+```python cipher.py affine plain.txt e -a 3 -b 5```
 
 To decrypt the plaintext using the Affine method by the function of 3x+5: 
 
-```python ciphers.py affine coded_affine.txt d -a 3 -b 5```
+```python cipher.py affine coded_affine.txt d -a 3 -b 5```
 
 To break the ciphertext using the Affine method: 
 
-```python breakers.py affine coded_affine.txt```
+```python break.py affine coded_affine.txt```
 
 ### Use of Mono-alphabetic Substitution Method:
 
 To encrypt the plaintext using the Mono-alphabetic Substitution method by given key alphabet. This command creates a txt file named coded_mono.txt containing the encrypted text: 
 
-```python ciphers.py mono plain.txt e -k QWERTYUIOPASDFGHJKLZXCVBNM```
+```python cipher.py mono plain.txt e -k QWERTYUIOPASDFGHJKLZXCVBNM```
 
 To decrypt the plaintext using the Mono-alphabetic Substitution method by given key alphabet: 
 
-```python ciphers.py mono coded_mono.txt d -k QWERTYUIOPASDFGHJKLZXCVBNM```
+```python cipher.py mono coded_mono.txt d -k QWERTYUIOPASDFGHJKLZXCVBNM```
 
 To analyze and show the frequency of letters of the given source file: 
 
-```python breakers.py alphatest plain.txt ```
+```python break.py alphatest plain.txt ```
 
 To break the ciphertext using the Mono-alphabetic Substitution method by calculating frequency analysis: 
 
-```python breakers.py mono coded_mono.txt```
+```python break.py mono coded_mono.txt```
 
 ### Efficiency Test:
 
