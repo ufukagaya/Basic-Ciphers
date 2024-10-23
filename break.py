@@ -112,7 +112,7 @@ def break_mono(ciphertext):
     most_common = [pair[0] for pair in letter_freq.most_common()]
     # dictionary = load_dictionary(dictionary_file_path)
     key_guess = {
-        # most_common[0]: "E",
+        most_common[0]: "E",
         # most_common[-1]: "Z",
         # most_common[-2]: "Q",
         # most_common[-3]: "J",
@@ -131,10 +131,10 @@ def break_mono(ciphertext):
     sorted_three = {}
     sorted_three = dict(sorted(three_letter_words.items(), key=lambda x: x[1], reverse=True))
     sorted_three = list(sorted_three.keys())
-    if sorted_three[0][2] == "E":
+    if sorted_three[0][2] == most_common[0]:
         key_guess[sorted_three[0][0]] = "T"
         key_guess[sorted_three[0][1]] = "H"
-        key_guess[sorted_three[0][2]] = "E"
+        #key_guess[sorted_three[0][2]] = "E"
         key_guess[sorted_three[1][0]] = "A"
         key_guess[sorted_three[1][1]] = "N"
         key_guess[sorted_three[1][2]] = "D"
@@ -144,7 +144,7 @@ def break_mono(ciphertext):
         key_guess[sorted_three[0][2]] = "D"
         key_guess[sorted_three[1][0]] = "T"
         key_guess[sorted_three[1][1]] = "H"
-        key_guess[sorted_three[1][2]] = "E"
+        #key_guess[sorted_three[1][2]] = "E"
     split_dictionary = dictionary.split()
     for w in sorted(cwords, key=len, reverse=True):
         if any(char.upper() in key_guess for char in w):
