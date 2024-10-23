@@ -40,7 +40,7 @@ To decrypt the ciphertext using the same Caesar method by shifting amount 13:
 
 To break the ciphertext using the Caesar method: 
 
-```python breakers.py caesar coded_caesar.txt dictionary.txt```
+```python breakers.py caesar coded_caesar.txt```
 
 ### Usage of Affine Method:
 
@@ -54,7 +54,7 @@ To decrypt the plaintext using the Affine method by the function of 3x+5:
 
 To break the ciphertext using the Affine method: 
 
-```python breakers.py affine coded_affine.txt dictionary.txt```
+```python breakers.py affine coded_affine.txt```
 
 ### Usage of Mono-alphabetic Substitution Method:
 
@@ -66,16 +66,16 @@ To decrypt the plaintext using the Mono-alphabetic Substitution method by given 
 
 ```python ciphers.py mono coded_mono.txt d -k QWERTYUIOPASDFGHJKLZXCVBNM```
 
-To analyze and show the frequency of letters of the given source dictionary: 
+To analyze and show the frequency of letters of the given source file: 
 
-```python breakers.py alphatest plain.txt dictionary.txt```
+```python breakers.py alphatest plain.txt ```
 
-To break the ciphertext using the Mono-alphabetic Substitution method by calculating frequency analysis using given dictionary source: 
+To break the ciphertext using the Mono-alphabetic Substitution method by calculating frequency analysis: 
 
-```python breakers.py mono coded_mono.txt dictionary.txt```
+```python breakers.py mono coded_mono.txt```
 
 ### Efficiency Test:
 
-To calculate and show the time of the breaker functions: 
+To calculate and show the time of the breaker functions using plain.txt: 
 
-```python efficiency_test.py plain.txt dictionary.txt```
+```python efficiency_test.py plain.txt```
