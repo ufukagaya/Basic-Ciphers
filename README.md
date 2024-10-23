@@ -28,7 +28,7 @@ To show the first version of plaintext:
 
 ```python ciphers.py show plain.txt s```
 
-### Usage of Caesar Method:
+### Use of Caesar Method:
 
 To encrypt the plaintext using the Caesar method by shifting amount 13. This command creates a txt file named coded_caesar.txt containing the encrypted text: 
 
@@ -42,7 +42,7 @@ To break the ciphertext using the Caesar method:
 
 ```python breakers.py caesar coded_caesar.txt```
 
-### Usage of Affine Method:
+### Use of Affine Method:
 
 To encrypt the plaintext using the Affine method by the function of 3x+5. This command creates a txt file named coded_affine.txt containing the encrypted text: 
 
@@ -56,7 +56,7 @@ To break the ciphertext using the Affine method:
 
 ```python breakers.py affine coded_affine.txt```
 
-### Usage of Mono-alphabetic Substitution Method:
+### Use of Mono-alphabetic Substitution Method:
 
 To encrypt the plaintext using the Mono-alphabetic Substitution method by given key alphabet. This command creates a txt file named coded_mono.txt containing the encrypted text: 
 
