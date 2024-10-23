@@ -98,6 +98,14 @@ def analyze_letter_frequency(dictionary):
     return result
 
 
+def custom_match(word, regex):
+    if len(regex) != len(word):
+        return False
+    for w_char, r_char in zip(word, regex):
+        if r_char != '.' and r_char != w_char.upper():
+            return False
+    return True    
+
 def break_mono(ciphertext):
     common_letters = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
     letter_freq = Counter(filter(str.isalpha, ciphertext.upper()))
@@ -151,15 +159,10 @@ def break_mono(ciphertext):
                         unknown_chars.append(index)
                 else:
                     break
-
-            regex_string = f"^{regex_string}$"
-            pattern = re.compile(regex_string, re.IGNORECASE)
-            matching_words = [word for word in split_dictionary if pattern.match(word)]
-            """for word in split_dictionary:
-                if pattern.match(word):
-                    print(regex_string)
-                    print(word)
-                    matching_words.append(word)"""
+            #real_regex = regex_string
+            #regex_string = f"^{regex_string}$"
+            #pattern = re.compile(regex_string, re.IGNORECASE)
+            matching_words = [word for word in split_dictionary if custom_match(word, regex_string)]
 
             if len(matching_words) == 1:
                 match_word = matching_words[0]
